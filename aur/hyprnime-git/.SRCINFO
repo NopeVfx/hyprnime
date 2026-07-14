@@ -1,0 +1,24 @@
+pkgbase = hyprnime-git
+	pkgdesc = Graphical anime launcher (GTK4/libadwaita) backed by ani-cli, built for Hyprland, launchable from rofi (git version)
+	pkgver = r1.0000000
+	pkgrel = 1
+	url = https://github.com/NopeVfx/hyprnime
+	arch = any
+	license = MIT
+	makedepends = git
+	depends = python
+	depends = python-gobject
+	depends = gtk4
+	depends = libadwaita
+	depends = ani-cli
+	depends = mpv
+	optdepends = vlc: alternative player
+	optdepends = rofi: for the optional hyprnime-rofi companion script
+	optdepends = ani-skip: for intro skipping
+	optdepends = syncplay: for the Watch Party feature
+	provides = hyprnime
+	conflicts = hyprnime
+	source = hyprnime-git::git+https://github.com/NopeVfx/hyprnime.git#branch=main
+	sha256sums = SKIP
+
+pkgname = hyprnime-git

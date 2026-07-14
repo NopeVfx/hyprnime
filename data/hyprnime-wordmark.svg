@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="120" viewBox="0 0 420 120">
+  <defs>
+    <linearGradient id="badge-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a1b26"/>
+      <stop offset="1" stop-color="#16161e"/>
+    </linearGradient>
+    <linearGradient id="gem-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0"    stop-color="#7dcfff"/>
+      <stop offset="0.45" stop-color="#7aa2f7"/>
+      <stop offset="1"    stop-color="#bb9af7"/>
+    </linearGradient>
+    <linearGradient id="text-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#c0caf5"/>
+      <stop offset="1" stop-color="#bb9af7"/>
+    </linearGradient>
+    <mask id="play-cut">
+      <rect x="0" y="0" width="128" height="128" fill="white"/>
+      <polygon points="54,48 54,80 82,64" fill="black"/>
+    </mask>
+  </defs>
+
+  <g transform="translate(4,4)">
+    <rect x="0" y="0" width="112" height="112" rx="24" fill="url(#badge-bg)"/>
+    <g mask="url(#play-cut)">
+      <polygon points="56,20 87.6,38 87.6,74 56,92 24.4,74 24.4,38" fill="url(#gem-grad)"/>
+    </g>
+    <g stroke="#1a1b26" stroke-width="1.3" opacity="0.35" stroke-linecap="round">
+      <line x1="56" y1="56" x2="56" y2="20"/>
+      <line x1="56" y1="56" x2="87.6" y2="38"/>
+      <line x1="56" y1="56" x2="87.6" y2="74"/>
+      <line x1="56" y1="56" x2="56" y2="92"/>
+      <line x1="56" y1="56" x2="24.4" y2="74"/>
+      <line x1="56" y1="56" x2="24.4" y2="38"/>
+    </g>
+  </g>
+
+  <text x="138" y="76" font-family="'Inter','Segoe UI',sans-serif" font-size="46" font-weight="800" fill="url(#text-grad)">Hyprnime</text>
+  <text x="140" y="98" font-family="'Inter','Segoe UI',sans-serif" font-size="15" font-weight="500" letter-spacing="2.5" fill="#565f89">ANIME LAUNCHER FOR HYPRLAND</text>
+</svg>

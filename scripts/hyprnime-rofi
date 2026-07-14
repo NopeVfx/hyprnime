@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Optional, lighter-weight companion to the GTK app.
+#
+# ani-cli already ships its own rofi frontend (ANI_CLI_EXTERNAL_MENU=1)
+# for the anime/episode picker -- this script just adds the missing
+# piece: a rofi prompt for the *search query* itself, so the whole
+# flow (search -> pick anime -> pick episode -> play) never needs a
+# terminal window, for people who'd rather use plain rofi menus than
+# the full graphical app.
+#
+# Bind this to a key in your WM, e.g. in sway/i3:
+#   bindsym $mod+a exec hyprnime-rofi
+set -euo pipefail
+
+query=$(rofi -dmenu -p "Search anime" -lines 0)
+[ -z "$query" ] && exit 0
+
+mode_choice=$(printf "Sub\nDub" | rofi -dmenu -p "Audio")
+[ -z "$mode_choice" ] && exit 0
+
+dub_flag=()
+[ "$mode_choice" = "Dub" ] && dub_flag=(--dub)
+
+export ANI_CLI_EXTERNAL_MENU=1
+export ANI_CLI_EXTERNAL_MENU_NORMAL_WINDOW=1
+
+setsid -f ani-cli "$query" --rofi "${dub_flag[@]}" >/dev/null 2>&1 < /dev/null

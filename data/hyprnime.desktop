@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Hyprnime
+GenericName=Anime Launcher
+Comment=Browse and watch anime via ani-cli, no terminal required
+Exec=hyprnime
+Icon=hyprnime
+Terminal=false
+Categories=AudioVideo;Video;Player;
+Keywords=anime;ani-cli;streaming;watch;mpv;hyprland;
+StartupNotify=true
+StartupWMClass=dev.hyprnime.Hyprnime

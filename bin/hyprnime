@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""Launches the Hyprnime GUI. Installed to /usr/bin/hyprnime by the
+PKGBUILD/install.sh so it can be started from a .desktop entry, an app
+launcher such as rofi's drun mode, or a keybind -- never a terminal."""
+import sys
+import os
+
+# Find the hyprnime package whether we're running from a source checkout
+# (bin/hyprnime next to hyprnime/) or from an installed package
+# (PKGBUILD puts it in /usr/lib/hyprnime).
+_here = os.path.dirname(os.path.abspath(__file__))
+_repo_root = os.path.dirname(_here)
+for _candidate in (_repo_root, "/usr/lib/hyprnime"):
+    if os.path.isdir(os.path.join(_candidate, "hyprnime")):
+        sys.path.insert(0, _candidate)
+        break
+
+from hyprnime.main import main
+
+if __name__ == "__main__":
+    sys.exit(main())

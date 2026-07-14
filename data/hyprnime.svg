@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="badge-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a1b26"/>
+      <stop offset="1" stop-color="#16161e"/>
+    </linearGradient>
+    <linearGradient id="gem-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0"    stop-color="#7dcfff"/>
+      <stop offset="0.45" stop-color="#7aa2f7"/>
+      <stop offset="1"    stop-color="#bb9af7"/>
+    </linearGradient>
+    <mask id="play-cut">
+      <rect x="0" y="0" width="128" height="128" fill="white"/>
+      <polygon points="54,48 54,80 82,64" fill="black"/>
+    </mask>
+  </defs>
+
+  <!-- app badge -->
+  <rect x="4" y="4" width="120" height="120" rx="26" fill="url(#badge-bg)"/>
+
+  <!-- faceted gem, play glyph cut out of its center as negative space -->
+  <g mask="url(#play-cut)">
+    <polygon points="64,24 98.6,44 98.6,84 64,104 29.4,84 29.4,44" fill="url(#gem-grad)"/>
+  </g>
+
+  <!-- facet lines for a cut-gem texture -->
+  <g stroke="#1a1b26" stroke-width="1.4" opacity="0.35" stroke-linecap="round">
+    <line x1="64" y1="64" x2="64" y2="24"/>
+    <line x1="64" y1="64" x2="98.6" y2="44"/>
+    <line x1="64" y1="64" x2="98.6" y2="84"/>
+    <line x1="64" y1="64" x2="64" y2="104"/>
+    <line x1="64" y1="64" x2="29.4" y2="84"/>
+    <line x1="64" y1="64" x2="29.4" y2="44"/>
+  </g>
+
+  <!-- outer hex edge for crispness at small sizes -->
+  <polygon points="64,24 98.6,44 98.6,84 64,104 29.4,84 29.4,44"
+           fill="none" stroke="#1a1b26" stroke-width="1.6" opacity="0.25"/>
+</svg>
