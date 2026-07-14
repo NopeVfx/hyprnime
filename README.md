@@ -115,7 +115,7 @@ Dependencies:
 
 ```bash
 sudo pacman -S python-gobject gtk4 libadwaita mpv
-# ani-cli is in the AUR:
+
 yay -S ani-cli
 # or install manually: https://github.com/pystardust/ani-cli#installation
 
@@ -138,32 +138,6 @@ or install directly without packaging:
 Either way this installs `hyprnime` to your `PATH` and a `.desktop` entry,
 so it appears in your app launcher / rofi's `drun` mode.
 
-## Launching from rofi / Hyprland
-
-Once installed, `hyprnime.desktop` is picked up automatically by
-`rofi -show drun`. For a direct keybind in your Hyprland config:
-
-```
-bind = $mainMod, A, exec, hyprnime
-```
-
-or for a plain rofi/sway/i3 setup:
-
-```
-bindsym $mod+a exec hyprnime
-```
-
-### Bonus: pure rofi flow (no GUI window at all)
-
-`ani-cli` already ships its **own** rofi frontend for picking anime/episodes.
-If you'd rather stay in rofi menus the whole time instead of opening the
-graphical app, `scripts/hyprnime-rofi` (installed as `hyprnime-rofi`) adds
-just the missing search-query prompt on top of that:
-
-```
-bind = $mainMod SHIFT, A, exec, hyprnime-rofi
-```
-
 ## Project layout
 
 ```
@@ -179,32 +153,6 @@ hyprnime-app/
     │                   # syncplay_backend.py, party_directory.py
     └── theming/        # manager.py, style.css, build_themes.py, themes/*.css
 ```
-
-## Publishing this to GitHub
-
-I can't push to GitHub on your behalf (no credentials), but the repo is
-ready to go -- from this folder:
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-gh repo create hyprnime --public --source=. --push
-# or, without the gh CLI:
-git remote add origin https://github.com/NopeVfx/hyprnime.git
-git branch -M main
-git push -u origin main
-```
-
-Before publishing, update the `url`/`source` fields in `PKGBUILD` and the
-copyright name in `LICENSE` with your actual GitHub username/name.
-
-## Publishing to the AUR
-
-See `aur/README.md` for the full walkthrough. Short version: `aur/hyprnime-git/`
-builds from your repo's latest commit (submit this one first, no release
-tag needed); `aur/hyprnime/` builds from a tagged GitHub release (use it
-once you've cut one).
 
 ## Status / what's not done yet
 
