@@ -1,4 +1,4 @@
-# Maintainer: NopeVfx <your-email@example.com>
+# Maintainer: NopeVfx <skidxql@gmail.com>
 pkgname=hyprnime
 pkgver=0.1.0
 pkgrel=1
