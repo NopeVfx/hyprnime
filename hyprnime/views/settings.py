@@ -13,9 +13,10 @@ PLAYERS = [("mpv", "mpv"), ("vlc", "VLC")]
 
 
 class SettingsView(Adw.PreferencesPage):
-    def __init__(self, theme_manager: ThemeManager):
+    def __init__(self, theme_manager: ThemeManager, toast_overlay: Adw.ToastOverlay = None):
         super().__init__()
         self.theme_manager = theme_manager
+        self.toast_overlay = toast_overlay
         self.cfg = config.load()
 
         self._build_appearance_group()
@@ -55,12 +56,29 @@ class SettingsView(Adw.PreferencesPage):
     def _on_scheme_changed(self, row, _pspec):
         scheme_id = self._scheme_ids[row.get_selected()]
         self.cfg = config.set_value("color_scheme", scheme_id)
-        self.theme_manager.apply(self.cfg["color_scheme"], self.cfg["custom_theme"])
+        self._apply_theme_safely()
 
     def _on_theme_changed(self, row, _pspec):
         theme_id = self._theme_ids[row.get_selected()]
         self.cfg = config.set_value("custom_theme", theme_id)
-        self.theme_manager.apply(self.cfg["color_scheme"], self.cfg["custom_theme"])
+        self._apply_theme_safely()
+
+    def _apply_theme_safely(self):
+        """theme_manager.apply() touches CSS providers and the display --
+        if that ever fails (bad/missing CSS file, GTK error) it must not
+        fail *silently*, or picking a theme just looks like it does
+        nothing with no clue why."""
+        try:
+            self.theme_manager.apply(self.cfg["color_scheme"], self.cfg["custom_theme"])
+        except Exception as exc:  # noqa: BLE001 -- surfacing this beats hiding it
+            self._toast(f"Couldn't apply theme: {exc}")
+        else:
+            if self.cfg["custom_theme"] != "none":
+                self._toast(f"Theme applied: {self.cfg['custom_theme']}")
+
+    def _toast(self, message: str):
+        if self.toast_overlay is not None:
+            self.toast_overlay.add_toast(Adw.Toast(title=message, timeout=4))
 
     # ------------------------------------------------------------------
     def _build_playback_group(self):

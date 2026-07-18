@@ -6,6 +6,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw, GLib
 
 from ..backend import anilist, history
+from ..backend.anilist import AniListError
 from .widgets import AnimeCard
 
 
@@ -69,25 +70,37 @@ class HomeView(Gtk.Box):
     def _resume(self, title):
         # Resolve full metadata via AniList so the detail page has cover art etc.
         def worker():
-            results = anilist.search(title, per_page=1)
+            try:
+                results = anilist.search(title, per_page=1)
+            except AniListError:
+                return  # a failed resume just does nothing; the error is already
+                        # visible from the Trending/Search sections on this page
             if results:
                 GLib.idle_add(self.on_open_anime, results[0])
         threading.Thread(target=worker, daemon=True).start()
 
     def _load_trending(self):
         def worker():
-            results = anilist.trending(per_page=24)
-            GLib.idle_add(self._populate_trending, results)
+            try:
+                results = anilist.trending(per_page=24)
+                GLib.idle_add(self._populate_trending, results, None)
+            except AniListError as exc:
+                GLib.idle_add(self._populate_trending, [], str(exc))
         threading.Thread(target=worker, daemon=True).start()
 
-    def _populate_trending(self, results):
+    def _populate_trending(self, results, error):
         self.spinner.set_visible(False)
         self.spinner.set_spinning(False)
-        if not results:
-            empty = Gtk.Label(label="Couldn't reach AniList right now.", xalign=0)
+        if error:
+            empty = Gtk.Label(label=error, xalign=0, wrap=True)
             empty.add_css_class("anicli-empty-state")
             self.append(empty)
-            return
+            return False
+        if not results:
+            empty = Gtk.Label(label="AniList returned no trending results right now.", xalign=0)
+            empty.add_css_class("anicli-empty-state")
+            self.append(empty)
+            return False
         for res in results:
             card = AnimeCard(res, self.on_open_anime)
             self.flow.append(card)

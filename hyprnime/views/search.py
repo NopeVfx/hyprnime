@@ -6,6 +6,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw, GLib
 
 from ..backend import anilist
+from ..backend.anilist import AniListError
 from .widgets import AnimeCard
 
 
@@ -53,16 +54,22 @@ class SearchView(Gtk.Box):
         self.spinner.set_spinning(True)
 
         def worker():
-            results = anilist.search(query, per_page=30)
-            GLib.idle_add(self._populate, results, query)
+            try:
+                results = anilist.search(query, per_page=30)
+                GLib.idle_add(self._populate, results, query, None)
+            except AniListError as exc:
+                GLib.idle_add(self._populate, [], query, str(exc))
 
         threading.Thread(target=worker, daemon=True).start()
 
-    def _populate(self, results, query):
+    def _populate(self, results, query, error):
         self.spinner.set_spinning(False)
+        if error:
+            self.status.set_label(error)
+            return False
         if not results:
             self.status.set_label(f"No results for “{query}”.")
-            return
+            return False
         self.status.set_label(f"{len(results)} result(s) for “{query}”")
         for res in results:
             self.flow.append(AnimeCard(res, self.on_open_anime))

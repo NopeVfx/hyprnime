@@ -1,7 +1,7 @@
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Gtk, Adw
+from gi.repository import Gtk, Adw, Gdk
 
 from . import config
 from .theming.manager import ThemeManager
@@ -56,7 +56,7 @@ class HyprnimeWindow(Adw.ApplicationWindow):
         self.search_view = SearchView(self.open_anime)
         self.party_view = PartyView(self.toast_overlay)
         self.downloads_view = DownloadsView(self.toast_overlay)
-        self.settings_view = SettingsView(self.theme_manager)
+        self.settings_view = SettingsView(self.theme_manager, self.toast_overlay)
 
         view_map = [
             ("home", self.home_view),
@@ -81,6 +81,26 @@ class HyprnimeWindow(Adw.ApplicationWindow):
         split.set_content(content_nav_page)
 
         self.sidebar_list.select_row(self.sidebar_list.get_row_at_index(0))
+
+        key_controller = Gtk.EventControllerKey()
+        key_controller.connect("key-pressed", self._on_key_pressed)
+        self.add_controller(key_controller)
+
+    def _on_key_pressed(self, _controller, keyval, _keycode, _state):
+        if keyval == Gdk.KEY_F11:
+            self._toggle_fullscreen()
+            return True
+        return False
+
+    def _toggle_fullscreen(self):
+        # Query the window's actual state (the "fullscreened" GObject
+        # property) rather than tracking our own flag, so this stays
+        # correct even if something else (the compositor, a WM keybind)
+        # changed fullscreen state since we last touched it.
+        if self.get_property("fullscreened"):
+            self.unfullscreen()
+        else:
+            self.fullscreen()
 
     def _on_sidebar_selected(self, _listbox, row):
         if row is None:

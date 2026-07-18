@@ -269,12 +269,19 @@ class PartyView(Gtk.Box):
             self.anime_results.remove(child)
 
         def worker():
-            results = anilist.search(query, per_page=8)
-            GLib.idle_add(self._populate_anime_results, results)
+            try:
+                results = anilist.search(query, per_page=8)
+                GLib.idle_add(self._populate_anime_results, results, None)
+            except anilist.AniListError as exc:
+                GLib.idle_add(self._populate_anime_results, [], str(exc))
 
         threading.Thread(target=worker, daemon=True).start()
 
-    def _populate_anime_results(self, results):
+    def _populate_anime_results(self, results, error):
+        if error:
+            row = Adw.ActionRow(title=error)
+            self.anime_results.append(row)
+            return False
         if not results:
             row = Adw.ActionRow(title="No matches found")
             self.anime_results.append(row)
